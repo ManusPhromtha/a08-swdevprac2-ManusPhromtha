@@ -1,29 +1,27 @@
 import Image from "next/image"
+import getVenue from "@/libs/getVenue"
 
-export default function CarDetailPage( {params} : { params: {vid:string}} ) {
+export default async function VenueDetailPage( {params} : { params: {vid:string}} ) {
 
-    /**
-     * Mock Data for Demonstration Only
-     */
-    const mockCarRepo = new Map()
-    mockCarRepo.set("001", {name: "The Bloom Pavilion", image: "/img/bloom.jpg"})
-    mockCarRepo.set("002", {name: "Spark Space", image: "/img/sparkspace.jpg"})
-    mockCarRepo.set("003", {name: "The Grand Table", image: "/img/grandtable.jpg"})
+    const VenueDetail = await getVenue(params.vid)
 
     return (
         <main className="text-center p-5">
-            <h1 className="text-lg font-medium">Venue ID {params.vid}</h1>
+            <h1 className="text-lg font-medium">{VenueDetail.data.name}</h1>
             <div className="flex flex-row my-5">
-                <Image src={ (mockCarRepo.get(params.vid)).image }
-                alt='Car Image'
+                <Image src={ VenueDetail.data.picture }
+                alt='Venue Image'
                 width={0} height={0} sizes="100vw"
                 className="rounded-lg w-[30%]"/>
-                <div className="text-md mx-5">{ (mockCarRepo.get(params.vid)).name }</div>
+                <div className="text-left">
+                    <div className="text-md mx-5">Name: { VenueDetail.data.name }</div>
+                    <div className="text-md mx-5">Address: { VenueDetail.data.address }</div>
+                    <div className="text-md mx-5">District: { VenueDetail.data.district }</div>
+                    <div className="text-md mx-5">Postal Code: { VenueDetail.data.postalcode }</div>
+                    <div className="text-md mx-5">Tel: { VenueDetail.data.tel }</div>
+                    <div className="text-md mx-5">Daily Rate: { VenueDetail.data.dailyrate }</div>
+                </div>
             </div>
         </main>
     )
-}
-
-export async function generateStaticParams() {
-    return [{vid:'001'},{vid:'002'},{vid:'003'}]
 }
